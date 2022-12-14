@@ -17,7 +17,8 @@ import warnings
 warnings.filterwarnings("ignore")
 
 # 1) Poner la pantalla en modo apaisado (que ocupe todo el espacio)
-st.set_page_config(page_icon="arrow-through-heart-fill", page_title="PMHD", layout="wide")
+st.set_page_config(page_icon="logo.png", page_title="PMHD", layout="wide")
+
 hide_menu = """
 <style>
 #MainMenu{
@@ -27,7 +28,7 @@ footer{
     visibility:visible;
 }
 footer:after{
-    content:'Copyright @ 2022: Streamlit';
+    content:'Copyright @ 2022: Maria Belen & Carlos Javier';
     display:block;
     position:relative;
     color:orange;
@@ -43,11 +44,18 @@ def menu_about():
         st.markdown(""" <style> .font {
         font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
         </style> """, unsafe_allow_html=True)
-        st.markdown('<p class="font">PMHD - Predicion Model for Heart Disease</p>', unsafe_allow_html=True)    
+        st.markdown('<p class="font">PMHD - Predicion Model for Heart Disease</p>', unsafe_allow_html=True)
 
 
     st.write("PMHD, es un interfaz construido en Streamlit para analizar si un paciente puede tener una enfermedad cardiaca")    
     st.image("imagen_1.jfif", width=700 )
+
+
+    # Hacemos el pie de pagina
+    with st.expander("ℹ️ - About the creators", expanded=True):
+        st.write("- María Belén Aristizábal and Carlos Javier Cuenca are data science professionals, enthusiasts, and bloggers. They write data science articles and tutorials on Python, data visualization, Streamlit, etc. They are also amateur dancers who love salsa music.")
+        st.write("- To read data science posts, please visit their Medium blog at: https://XXXXXXXXXXXXXX")
+        st.markdown("")
 
 def menu_database():
     st.markdown(""" <style> .font {
@@ -93,18 +101,18 @@ def main():
 #    st.title("App PMHD")
     st.markdown(hide_menu, unsafe_allow_html=True)
 
-    #"background-color": "#02ab21"
-#4a5bf5
+    #"background-color": "#02ab21" - #4a5bf5  - 0019f5 - 
+#4a5bf5  - 0019f5 - 
 #
     with st.sidebar:
         choose = option_menu("App PMHD", ["About", "DataBase", "Graphics Database", "Query Database", "Predicción"],
-                            icons=['house', 'device-ssd', 'graph-down', "diagram-2" , 'speedometer'],
+                            icons=["house", 'device-ssd', 'graph-down', "diagram-2" , 'speedometer'],
                             menu_icon="app-indicator", default_index=0,
                             styles={
             "container": {"padding": "5!important", "background-color": "#fafafa"},
             "icon": {"color": "orange", "font-size": "25px"}, 
             "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-            "nav-link-selected": {"background-color": "#0019f5"},
+            "nav-link-selected": {"background-color": "#4a5bf5"},
         }
         )
 
@@ -255,11 +263,7 @@ def main():
 
 
 
-    # Hacemos el pie de pagina
-    with st.expander("ℹ️ - About the creators", expanded=True):
-        st.write("- María Belén Aristizábal and Carlos Javier Cuenca are data science professionals, enthusiasts, and bloggers. They write data science articles and tutorials on Python, data visualization, Streamlit, etc. They are also amateur dancers who love salsa music.")
-        st.write("- To read data science posts, please visit their Medium blog at: https://XXXXXXXXXXXXXX")
-        st.markdown("")
+
 
 
 
