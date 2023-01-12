@@ -4,6 +4,7 @@ from streamlit_option_menu import option_menu
 from streamlit_modal import Modal
 import streamlit.components.v1 as components
 
+import time
 
 import pandas as pd
 
@@ -12,58 +13,86 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.express as px
 
-from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 import pickle
 import warnings
 
 from models import datosBD
 from CRUD import crud
+from BBDDsqlite3 import insertRow
 from connection import connect
+import settings
 
-# Definimos las funciones usadas en la APP
-def popup():
-    import hydralit_components as hc
-    import streamlit as st
-
-
-    hc.hydralit_experimental(True)
-
-
+def popup_nuevo():
     modal_code = """
-                <div>
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                </div>
-                <div class="modal-body">
-                <div class="container">
-                <h2>¿Desea guardar en Base de Datos?</h2>
+    <dialog>
+    <h2>Este es el título de mi ventana modal</h2>
+    <p>Este es un texto de ejemplo dentro de una ventana modal</p>
+    </dialog>
 
-                </div>
-                </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Guardar en BBDD</button>
-                </div>
-                </div>
-                </div>
-                </div>
-                </div>
-                """
-
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+    <div class="container">
+    <h2>Datos guardados correctamente</h2>
+    </div>
+    </div>
+    <div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    """
 
     st.markdown(modal_code,unsafe_allow_html=True)
-    query_param = st.experimental_get_query_params()
 
-    if query_param:
-        st.write('We caputred these values from the experimental modal form using Javascript + HTML + Streamlit + Hydralit Components.')
-        st.write(query_param)
+    return True
+
+# Definimos las funciones usadas en la APP
+def popup_java_html():
+
+    st.write("ENTRANDO")
+    modal_code = """
+    <div>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    Guardar
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+    <div class="container">
+    <h2>Datos guardados correctamente</h2>
+    </div>
+    </div>
+    <div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    """
+
+    st.markdown(modal_code,unsafe_allow_html=True)
+
+    return True
 
 def pop_up_guardar(modal, submit, titulo,nombre_boton,respuesta_popup):
     # Opcion de formulario
@@ -82,7 +111,7 @@ def pop_up_guardar(modal, submit, titulo,nombre_boton,respuesta_popup):
 def menu_about():
     col1, col2 = st.columns( [0.1, 0.9])
     with col1:               # To display the header text using css style
-        st.image("logo.png", width=75 )
+        st.image("media/logo.png", width=75 )
     with col2:               # To display brand log
         st.markdown(""" <style> .font {
         font-size:35px ; font-family: 'Cooper Black'; color: #FF9633;} 
@@ -91,7 +120,7 @@ def menu_about():
 
 
     st.write("PMHD, es un interfaz construido en Streamlit para analizar si un paciente puede tener una enfermedad cardiaca")    
-    st.image("imagen_1.jfif", width=700 )
+    st.image("media/imagen_1.jfif", width=700 )
 
 
     # Hacemos el pie de pagina
@@ -446,26 +475,20 @@ def preparar_datos_BBDD(datosBD, Accion):
 
 def guardar_BBDD(registro, tipo_BBDD):
     if tipo_BBDD == "CSV":
-        st.write("registro",registro)
         data=pd.read_csv("media\heart.csv")
-        st.write("data",data)
         data = data.append(registro,ignore_index=True)
         data.to_csv("media\heart2.csv")
-        st.write("data2",data)
-    # elif tipo_BBDD == "Sqlite":
-    #     st.write("registro",registro)
-    #     data=pd.read_csv("media\heart.csv")
-    #     st.write("data",data)
-    #     data = data.append(registro,ignore_index=True)
-    #     data.to_csv("media\heart2.csv")
-    #     st.write("data2",data)
-    # elif tipo_BBDD == "Mongo":
-    #     st.write("registro",registro)
-    #     data=pd.read_csv("media\heart.csv")
-    #     st.write("data",data)
-    #     data = data.append(registro,ignore_index=True)
-    #     data.to_csv("media\heart2.csv")
-    #     st.write("data2",data)
+
+    elif tipo_BBDD == "Mongo":
+        data=crud.read_tabla()
+        if data.empty:
+            num_registro=crud.create_tabla()
+        else:
+            registro_dic=crud.insert_registro(registro)
+            data=crud.read_tabla()
+    
+    elif tipo_BBDD == "Sqlite":
+        insertRow(registro)
     else:
         st.write("ERROR")
 
@@ -486,7 +509,6 @@ def menu_prediccion():
         st.markdown("A continuación introduzca sus datos y haga clic para predecir si el paciente tiene o no una enfermedad cardiaca")
     else:
         st.markdown("A continuación introduzca sus datos y haga clic para guardar los datos de un paciente en la base de datos")
-
 
     # Formulario principal de entrada de los datos del paciente
     predict = False
@@ -524,13 +546,20 @@ def menu_prediccion():
                 guardaBD = st.radio("¿Guardar en BBDD?",
                         ["SI","NO",])
                 
-                predict = st.form_submit_button("Predict")
+                predict = st.form_submit_button("Predict", type='primary')
 
             else:
-                guardar_form1 = formulario_1.form_submit_button("Guardar")
-                if guardar_form1:
-                    registro = preparar_datos_BBDD(datosBD,"ALTA")
-                    guardar_BBDD(registro)
+                guardar_form1 = st.form_submit_button("Guardar", type='primary')
+            if guardar_form1:
+                registro = preparar_datos_BBDD(datosBD,"ALTA")
+                #guardar_BBDD(registro, "CSV")
+                #guardar_BBDD(registro, "Sqlite")
+                guardar_BBDD(registro, "Mongo")
+                with st.spinner('Wait for it...'):
+                    time.sleep(3)
+                st.success('Datos guardados correctamente', icon="✅")
+
+
         with cccol3:
             datosBD.ST_Slope  = st.selectbox("ST_Slope", ("Up", "Flat", "Down"), help = "The slope of the peak exercise ST segment--> [Up: upsloping - ascenso, Flat: plano, Down: downsloping - descenso]")  
         with cccol4:
@@ -542,7 +571,7 @@ def menu_prediccion():
         if predict:            
             X_test = preparar_datos_BBDD(datosBD,"ESTIMACION")
             # Leemos el modelo .
-            with open('model_ET_pkl' , 'rb') as f:
+            with open('Machine_Learning/model_ET_pkl' , 'rb') as f:
                 clf_ET = pickle.load(f)
 
             y_pred=clf_ET.predict(X_test)
@@ -559,14 +588,18 @@ def menu_prediccion():
 
             if guardaBD=="SI":
                 registro = preparar_datos_BBDD(datosBD,"ALTA")
-                guardar_BBDD(registro)
+                #guardar_BBDD(registro, "CSV")
+                guardar_BBDD(registro, "Mongo")
+                with st.spinner('Wait for it...'):
+                  time.sleep(3)
+                st.success('Datos guardados correctamente', icon="✅")
 
 def main():
 
     warnings.filterwarnings("ignore")
 
     # set settings for streamlit page
-    st.set_page_config(page_icon="logo.png", 
+    st.set_page_config(page_icon="  media/logo.png", 
                         page_title="PMHD", 
                         layout="wide"
                         )
