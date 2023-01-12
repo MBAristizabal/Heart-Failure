@@ -126,7 +126,7 @@ def menu_about():
     # Hacemos el pie de pagina
     with st.expander("ℹ️ - About the creators", expanded=True):
         st.write("- María Belén Aristizábal and Carlos Javier Cuenca are data science professionals, enthusiasts, and bloggers. They write data science articles and tutorials on Python, data visualization, Streamlit, etc. They are also amateur dancers who love salsa music.")
-        st.write("- To read data science posts, please visit their Medium blog at: https://XXXXXXXXXXXXXX")
+        st.write("- To read data science posts")
         st.markdown("")
 
 def menu_database():
@@ -488,7 +488,8 @@ def guardar_BBDD(registro, tipo_BBDD):
             data=crud.read_tabla()
     
     elif tipo_BBDD == "Sqlite":
-        insertRow(registro)
+        crud.insertRow(registro)
+
     else:
         st.write("ERROR")
 
@@ -510,8 +511,13 @@ def menu_prediccion():
     else:
         st.markdown("A continuación introduzca sus datos y haga clic para guardar los datos de un paciente en la base de datos")
 
+
+
     # Formulario principal de entrada de los datos del paciente
     predict = False
+    guardar_form1 = False
+    guardar_BB = False
+    respuesta_estimacion = ""
     formulario_1 = st.form("form1", clear_on_submit=True)
     with formulario_1:
         col1, col2, col3, col4, col5, col6 = st.columns([0.25,2.5,2.5,2.5,2.5,0.25])
@@ -550,14 +556,6 @@ def menu_prediccion():
 
             else:
                 guardar_form1 = st.form_submit_button("Guardar", type='primary')
-            if guardar_form1:
-                registro = preparar_datos_BBDD(datosBD,"ALTA")
-                #guardar_BBDD(registro, "CSV")
-                #guardar_BBDD(registro, "Sqlite")
-                guardar_BBDD(registro, "Mongo")
-                with st.spinner('Wait for it...'):
-                    time.sleep(3)
-                st.success('Datos guardados correctamente', icon="✅")
 
 
         with cccol3:
@@ -567,6 +565,16 @@ def menu_prediccion():
         with cccol5:
             if ModelType == "Dar de alta un dato de un paciente":
                 datosBD.HeartDisease  = st.selectbox("Heart Disease", (0, 1), disabled=False, help = "[1: heart disease, 0: Normal]") 
+
+        if guardar_form1:
+            registro = preparar_datos_BBDD(datosBD,"ALTA")
+            #guardar_BBDD(registro, "CSV")
+            guardar_BBDD(registro, "Sqlite")
+            #guardar_BBDD(registro, "Mongo")
+            guardar_BB = True
+
+
+
 
         if predict:            
             X_test = preparar_datos_BBDD(datosBD,"ESTIMACION")
@@ -585,14 +593,30 @@ def menu_prediccion():
                 not_y_pred=0
             with cccol5:
                 datosBD.HeartDisease  = st.selectbox("Heart Disease", (y_pred[0], not_y_pred), disabled=True, help = "[1: heart disease, 0: Normal]") 
-
+            
             if guardaBD=="SI":
                 registro = preparar_datos_BBDD(datosBD,"ALTA")
                 #guardar_BBDD(registro, "CSV")
-                guardar_BBDD(registro, "Mongo")
-                with st.spinner('Wait for it...'):
-                  time.sleep(3)
-                st.success('Datos guardados correctamente', icon="✅")
+                guardar_BBDD(registro, "Sqlite")
+                #guardar_BBDD(registro, "Mongo")
+                guardar_BB = True
+
+    if respuesta_estimacion == "SI":
+        st.info('Estimación --> HeartDisease = SI ', icon="💔")
+        st.write("")
+    elif respuesta_estimacion == "NO":
+        st.info('Estimación --> HeartDisease = NO ', icon="💖")
+    st.write("")
+    
+    if guardar_BB:
+        with st.spinner('Wait for it...'):
+            time.sleep(1)
+        st.success('Datos guardados correctamente', icon="✅")
+        zccol1, zccol2 = st.columns([3,10])
+        with zccol1:
+            name = st.selectbox("¿Quiere realizar alguna otra alta?", ("Indique acción", "SI", "NO"))
+            if name == "¿Quiere realizar alguna otra alta?":
+                st.stop()
 
 def main():
 
