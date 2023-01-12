@@ -7,7 +7,7 @@ class datosBD(BaseModel):
     RestingBP: int
     Cholesterol: int
     FastingBS: int
-    RestingEGC: str
+    RestingECG: str
     MaxHR: int
     ExerciseAngina: str
     Oldpeak: float
