@@ -377,46 +377,54 @@ def menu_query():
     </style> """, unsafe_allow_html=True)
     st.markdown('<p class="font">Query Database</p>', unsafe_allow_html=True)
     st.markdown('To start a data science project in Python, you will need to first import your data into a Pandas data frame. Often times we have our raw data stored in a local folder in csv format. Therefore let\'s learn how to use Pandas\' read_csv method to read our sample data into Python.')
+    st.write("")
+    data=pd.read_csv("media\heart.csv")
+    
+    columnas = data.columns
+    c1, c2 = st.columns([0.08, 0.4]) 
+    with c1:       
+        # Seleccionar todas las columnas:
+        
+        ModelType = st.radio("Seleccione una columna: ", (columnas))
+        try:
+            my_slider = st.slider(f"La columna seleccionada es {ModelType}",
+                                min_value=(int(min(data[ModelType])*0.75)),
+                                max_value=(int(max(data[ModelType])*1.25)),
+                                value=[min(data[ModelType]),
+                                max(data[ModelType])])
+                                
+            filtro = data[(data[ModelType] >= my_slider[0]) & (data[ModelType] <= my_slider[1])] 
+        except TypeError:
+            categorical = data[ModelType].value_counts()
+            categorical = data[ModelType].value_counts()
+        
+            
+            my_slider_categ = st.selectbox(f"La columna seleccionada es {ModelType}", (categorical.index))
+            filtro = data[data[ModelType] == my_slider_categ]
 
+        except st.errors.StreamlitAPIException:
+            oldpeak = st.slider(f"La columna seleccionada es {ModelType}",
+                                min_value=(float(min(data[ModelType])*0.75)),
+                                max_value=(float(max(data[ModelType])*0.25)),
+                                value=[min(data[ModelType]),
+                                max(data[ModelType])])
+             
+            filtro = data[(data[ModelType] >= oldpeak[0]) & (data[ModelType] <= oldpeak[1])] 
 
-    c30, c31 = st.columns([0.1, 0.3]) # 2 columnas: 10%, 30%
-    with c30:
-        st.title("Columna 31")
-        with st.form("my_form"):
-            st.write("Inside the form")
-            slider_val = st.slider("Form slider")
-            checkbox_val = st.checkbox("Form checkbox", value=True)
+        if ModelType =='HeartDisease':
+            opcion = st.selectbox('Seleccione un valor:', (0 ,1))           
+            st.write("El valor seleccionado de HeartDisease es:", opcion)
+            filtro = data[data[ModelType] == opcion]
 
-            ModelType = st.radio(
-                                "Choose your model",
-                                ["DistilBERT (Default)", "Flair"],
-                                help="At present, you can choose between 2 models (Flair or DistilBERT) to embed your text. More to come!",
-                            )
+        if ModelType =='FastingBS':
+            opcion = st.selectbox('Seleccione un valor:', (0 ,1))           
+            st.write("El valor seleccionado de FastingBS es:", opcion)
+            filtro = data[data[ModelType] == opcion]
 
-            top_N = st.slider(
-                                "# of results",
-                                min_value=1,
-                                max_value=30,
-                                value=10,
-                                help="You can choose the number of keywords/keyphrases to display. Between 1 and 30, default number is 10.",
-                            )
-
-            min_Ngrams = st.number_input(
-                                            "Minimum Ngram",
-                                            min_value=1,
-                                            max_value=4,
-                                            help="""The minimum value for the ngram range.
-                                *Keyphrase_ngram_range* sets the length of the resulting keywords/keyphrases.
-                                To extract keyphrases, simply set *keyphrase_ngram_range* to (1, 2) or higher depending on the number of words you would like in the resulting keyphrases.""",
-                                            # help="Minimum value for the keyphrase_ngram_range. keyphrase_ngram_range sets the length of the resulting keywords/keyphrases. To extract keyphrases, simply set keyphrase_ngram_range to (1, # 2) or higher depending on the number of words you would like in the resulting keyphrases.",
-                                        )
-
-            # Every form must have a submit button.
-            submitted = st.form_submit_button("Submit")
-            if submitted:
-                st.write("slider", slider_val, "checkbox", checkbox_val)
-
-        st.write("Outside the form")
+         
+    with c2: 
+        st.write(filtro)
+        
 
 def preparar_datos_BBDD(datosBD, Accion):
     # Preparo los datos como necesita el X_test y la BBDD:
