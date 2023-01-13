@@ -21,15 +21,7 @@ Source code: <https://github.com/giswqs/streamlit-XXXXXXXXXXXX>
 
 ![image](media/imagen_1.png)
 
-<img src="imagen_1.jfif" style=" width:100px ; height:100px " />
-
-
 ![image](media/imagen_2.png)
 
-<img src="imagen_1.jfif" style=" width:100px ; height:100px " />
-
-
 ![image](media/imagen_3.png)
-
-<img src="imagen_1.jfif" style=" width:100px ; height:100px " />
 
