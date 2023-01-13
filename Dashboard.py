@@ -28,7 +28,6 @@ def popup_nuevo():
     <h2>Este es el título de mi ventana modal</h2>
     <p>Este es un texto de ejemplo dentro de una ventana modal</p>
     </dialog>
-
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -66,7 +65,6 @@ def popup_java_html():
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
     Guardar
     </button>
-
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -161,7 +159,6 @@ def menu_database():
     st.markdown('- **ExerciseAngina** : Angina inducida por ejercicio (exercise-induced angina) [Y: Yes, N: No]')
     st.markdown('- **Oldpeak** : Depresión del ST inducida por el ejercicio en relación con el descanso (oldpeak) = ST [Numeric value measured in depression]')
     st.markdown("""- **ST_Slope** : La pendiente del segmento ST de ejercicio pico (categórica con 3 niveles) - (the slope of the peak exercise ST segment)
-
                 \n      - Up: upsloping - ascenso
                 \n      - Flat: plano
                 \n      - Down:  : downsloping - descenso
@@ -525,7 +522,9 @@ def menu_prediccion():
     predict = False
     guardar_form1 = False
     guardar_BB = False
+    guardaBD = ""
     respuesta_estimacion = ""
+
     formulario_1 = st.form("form1", clear_on_submit=True)
     with formulario_1:
         col1, col2, col3, col4, col5, col6 = st.columns([0.25,2.5,2.5,2.5,2.5,0.25])
@@ -556,7 +555,7 @@ def menu_prediccion():
         with cccol2:
             datosBD.Oldpeak = st.slider("Oldpeak", min_value=-3.5, max_value=7.5, value=1.0, step = 0.5)
             if ModelType == "Realizar una estimación":
-                # Initialize disabled for form_submit_button to True
+
                 guardaBD = st.radio("¿Guardar en BBDD?",
                         ["SI","NO",])
                 
@@ -573,16 +572,6 @@ def menu_prediccion():
         with cccol5:
             if ModelType == "Dar de alta un dato de un paciente":
                 datosBD.HeartDisease  = st.selectbox("Heart Disease", (0, 1), disabled=False, help = "[1: heart disease, 0: Normal]") 
-
-        if guardar_form1:
-            registro = preparar_datos_BBDD(datosBD,"ALTA")
-            #guardar_BBDD(registro, "CSV")
-            guardar_BBDD(registro, "Sqlite")
-            #guardar_BBDD(registro, "Mongo")
-            guardar_BB = True
-
-
-
 
         if predict:            
             X_test = preparar_datos_BBDD(datosBD,"ESTIMACION")
@@ -602,29 +591,59 @@ def menu_prediccion():
             with cccol5:
                 datosBD.HeartDisease  = st.selectbox("Heart Disease", (y_pred[0], not_y_pred), disabled=True, help = "[1: heart disease, 0: Normal]") 
             
-            if guardaBD=="SI":
-                registro = preparar_datos_BBDD(datosBD,"ALTA")
-                #guardar_BBDD(registro, "CSV")
-                guardar_BBDD(registro, "Sqlite")
-                #guardar_BBDD(registro, "Mongo")
-                guardar_BB = True
 
     if respuesta_estimacion == "SI":
-        st.info('Estimación --> HeartDisease = SI ', icon="💔")
-        st.write("")
+        with cccol3 :
+            st.write("")                
+            st.write("")
+            st.write("")
+            st.write("")
+            st.error('ESTIMACION --------------> ')
+            st.write("")
+        with cccol4:
+            st.write("")                
+            st.write("")
+            st.write("")
+            st.write("")
+            st.error('HeartDisease = SI ', icon="💔")
+            st.write("")            
     elif respuesta_estimacion == "NO":
-        st.info('Estimación --> HeartDisease = NO ', icon="💖")
-    st.write("")
-    
-    if guardar_BB:
+        with cccol3:
+            st.write("")                
+            st.write("")
+            st.write("")
+            st.write("")
+            st.error('ESTIMACION --------------> ')
+            st.write("")
+        with cccol4:
+            st.write("")                
+            st.write("")
+            st.write("")
+            st.write("")
+            st.error('HeartDisease = NO ', icon="💖")
+            st.write("")
+
+    if guardar_form1 or (predict and guardaBD=="SI"):
+        print("AQUI pasa")
+        registro = preparar_datos_BBDD(datosBD,"ALTA")
+        #guardar_BBDD(registro, "CSV")
+        guardar_BBDD(registro, "Sqlite")
+        #guardar_BBDD(registro, "Mongo")
         with st.spinner('Wait for it...'):
             time.sleep(1)
         st.success('Datos guardados correctamente', icon="✅")
-        zccol1, zccol2 = st.columns([3,10])
+
+    if guardar_form1 or predict:        
+        zccol1, zccol2 = st.columns([4,10])
         with zccol1:
-            name = st.selectbox("¿Quiere realizar alguna otra alta?", ("Indique acción", "SI", "NO"))
-            if name == "¿Quiere realizar alguna otra alta?":
-                st.stop()
+            if guardar_form1:
+                name = st.selectbox("¿Otra alta?", ("Indique acción", "SI", "NO"))
+                if name:
+                    st.stop()
+            elif predict:
+                name = st.selectbox("¿Otra estimacion?", ("Indique acción", "SI", "NO"))
+                if name:
+                    st.stop()
 
 def main():
 
