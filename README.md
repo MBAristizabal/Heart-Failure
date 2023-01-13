@@ -1,4 +1,5 @@
 # Heart-Failure
+
 Trabajamos en un proyecto que incluye la creacion de un Dashboard interactivo con Streamlit Framework.[Streamlit Cloud](https://streamlit.io/cloud)
 
 PMHD, es un interfaz construido en Streamlit para analizar si un paciente puede tener una enfermedad cardiaca.
@@ -20,14 +21,8 @@ Source code: <https://github.com/giswqs/streamlit-XXXXXXXXXXXX>
 
 ![image](media/imagen_1.png)
 
-<img src="imagen_1.jfif" style=" width:100px ; height:100px " />
-
-
 ![image](media/imagen_2.png)
-
-<img src="imagen_1.jfif" style=" width:100px ; height:100px " />
-
 
 ![image](media/imagen_3.png)
 
-<img src="imagen_1.jfif" style=" width:100px ; height:100px " />
+
