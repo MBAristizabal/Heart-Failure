@@ -12,18 +12,22 @@ Usamos el data de Kaggle "Heart Failure Prediction Dataset" https://www.kaggle.c
 
 Trabajamos con Python 3.8.10
 
-
 ## Source code
 
 Source code: <https://github.com/giswqs/streamlit-XXXXXXXXXXXX>
 
 ## Demo
 
-![image](media/imagen_1.jfif)
+![image](media/imagen_1.png)
 
 <img src="imagen_1.jfif" style=" width:100px ; height:100px " />
 
 
-![image](media/imagen_1.jfif)
+![image](media/imagen_2.png)
+
+<img src="imagen_1.jfif" style=" width:100px ; height:100px " />
+
+
+![image](media/imagen_3.png)
 
 <img src="imagen_1.jfif" style=" width:100px ; height:100px " />
