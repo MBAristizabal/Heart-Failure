@@ -26,10 +26,10 @@ def createTable():
     conn.commit()
     conn.close()
 
-def insertRow(Age,Sex,ChestPainType,RestingBP,Cholesterol,FastingBS,RestingEGC,MaxHR,ExerciseAngina,Oldpeak,ST_Slope,HeartDisease):
+def insertRow(registro):
     conn = sql.connect('HF.db')
     cursor = conn.cursor()
-    instruccion= f"INSERT INTO HF VALUES ({Age},'{Sex}','{ChestPainType}',{RestingBP},{Cholesterol},{FastingBS},'{RestingEGC}',{MaxHR},'{ExerciseAngina}',{Oldpeak},'{ST_Slope}',{HeartDisease})"
+    instruccion= f"INSERT INTO HF VALUES ({registro.Age},'{registro.Sex}','{registro.ChestPainType}',{registro.RestingBP},{registro.Cholesterol},{registro.FastingBS},'{registro.RestingEGC}',{registro.MaxHR},'{registro.ExerciseAngina}',{registro.Oldpeak},'{registro.ST_Slope}',{registro.HeartDisease})"
     cursor.execute(instruccion)
     conn.commit()
     conn.close()
