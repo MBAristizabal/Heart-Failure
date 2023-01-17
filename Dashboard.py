@@ -89,7 +89,7 @@ def menu_graphics():
 
     st.markdown('Podremos mostrar las principales gráficas de la base de datos')
     # Descargamos los datos
-    data=pd.read_csv("media\heart.csv")
+    data=pd.read_csv("media/heart.csv")
 
     c30, c31 = st.columns([1.5, 8.5]) 
     with c30:
@@ -291,7 +291,7 @@ def menu_query():
     st.markdown('<p class="font">Query Database</p>', unsafe_allow_html=True)
     st.markdown('To start a data science project in Python, you will need to first import your data into a Pandas data frame. Often times we have our raw data stored in a local folder in csv format. Therefore let\'s learn how to use Pandas\' read_csv method to read our sample data into Python.')
     st.write("")
-    data=pd.read_csv("media\heart.csv")
+    data=pd.read_csv("media/heart.csv")
     
     columnas = data.columns
     c1, c2 = st.columns([0.08, 0.4]) 
@@ -396,9 +396,9 @@ def preparar_datos_BBDD(datosBD, Accion):
 
 def guardar_BBDD(registro, tipo_BBDD):
     if tipo_BBDD == "CSV":
-        data=pd.read_csv("media\heart.csv")
+        data=pd.read_csv("media/heart.csv")
         data = data.append(registro,ignore_index=True)
-        data.to_csv("media\heart2.csv")
+        data.to_csv("media/heart2.csv")
 
     elif tipo_BBDD == "Mongo":
         data=crud.read_tabla()
