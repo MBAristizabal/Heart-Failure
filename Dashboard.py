@@ -34,8 +34,7 @@ def menu_about():
 
 
     st.write("PMHD, es un interfaz construido en Streamlit para analizar si un paciente puede tener una enfermedad cardiaca")    
-    st.write("Atención: esta app es con fines educativos, no es una prueba médica. Ante cualquier resultado alarmante consulte a su médico
-")    
+    st.write("Atención: esta app es con fines educativos, no es una prueba médica. Ante cualquier resultado alarmante consulte a su médico")    
     st.image("media/imagen_1.jfif", width=700 )
 
 
